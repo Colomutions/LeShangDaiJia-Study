@@ -17,13 +17,20 @@ import org.springframework.web.bind.annotation.RestController;
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class CustomerInfoController {
 
-	@Autowired
-	private CustomerInfoService customerInfoService;
+    @Autowired
+    private CustomerInfoService customerInfoService;
 
-	@Operation(summary = "获取客户基本信息")
-	@GetMapping("/getCustomerInfo/{customerId}")
-	public Result<CustomerInfo> getCustomerInfo(@PathVariable Long customerId) {
-		return Result.ok(customerInfoService.getById(customerId));
-	}
+    @Operation(summary = "获取客户基本信息")
+    @GetMapping("/getCustomerInfo/{customerId}")
+    public Result<CustomerInfo> getCustomerInfo(@PathVariable Long customerId) {
+        return Result.ok(customerInfoService.getById(customerId));
+    }
+
+    @Operation(summary = "微信小程序登录")
+    @GetMapping("/wxLogin/{code}")
+    public Result<Long> wxLogin(@PathVariable String code) {
+        return Result.ok(customerInfoService.login(code));
+    }
+
 }
 
