@@ -2,8 +2,12 @@ package com.atguigu.daijia.customer.controller;
 
 import com.atguigu.daijia.common.result.Result;
 import com.atguigu.daijia.customer.service.CustomerService;
+import com.atguigu.daijia.model.entity.customer.CustomerInfo;
+import com.atguigu.daijia.model.vo.customer.CustomerInfoVo;
+import com.atguigu.daijia.model.vo.customer.CustomerLoginVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +37,13 @@ public class CustomerController {
     public Result<String> wxLogin(@PathVariable("code") String code) {
         return Result.ok(customerService.login(code));
     }
+
+    @Operation(summary = "小程序授权登录接口")
+    @GetMapping("/getCustomerLoginInfo")
+    public Result<CustomerLoginVo> getCustomerLoginInfo(HttpServletRequest request) {
+        return Result.ok(customerService.getCustomerLoginInfo(request));
+    }
+
 
 }
 
