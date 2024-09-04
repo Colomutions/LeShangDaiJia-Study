@@ -1,5 +1,6 @@
 package com.atguigu.daijia.customer.controller;
 
+import com.atguigu.daijia.common.login.LoginCheck;
 import com.atguigu.daijia.common.result.Result;
 import com.atguigu.daijia.customer.service.CustomerInfoService;
 import com.atguigu.daijia.model.entity.customer.CustomerInfo;

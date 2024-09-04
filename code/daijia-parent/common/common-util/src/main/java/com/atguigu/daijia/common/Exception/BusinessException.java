@@ -12,25 +12,31 @@ public class BusinessException extends RuntimeException {
 
     private final Integer code;
 
-    private final String msg;
+    private final String message;
 
-    public BusinessException(String msg) {
-        super(msg);
-        this.code = DEFAULT_ERROR_CODE;
-        this.msg = msg;
+    public BusinessException(ResultCodeEnum resultCodeEnum) {
+        super(resultCodeEnum.getMessage());
+        this.code = resultCodeEnum.getCode();
+        this.message = resultCodeEnum.getMessage();
     }
 
-    public BusinessException(Integer code, String msg) {
-        super(msg);
+    public BusinessException(String message) {
+        super(message);
+        this.code = DEFAULT_ERROR_CODE;
+        this.message = message;
+    }
+
+    public BusinessException(Integer code, String message) {
+        super(message);
         this.code = code;
-        this.msg = msg;
+        this.message = message;
     }
     
     public Integer getCode() {
         return code;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getMessage() {
+        return message;
     }
 }

@@ -1,5 +1,6 @@
 package com.atguigu.daijia.common.handler;
 
+import com.atguigu.daijia.common.Exception.BusinessException;
 import com.atguigu.daijia.common.execption.GuiguException;
 import com.atguigu.daijia.common.result.Result;
 import com.atguigu.daijia.common.result.ResultCodeEnum;
@@ -41,6 +42,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(GuiguException.class)
     @ResponseBody
     public Result error(GuiguException e){
+        e.printStackTrace();
+        return Result.build(null,e.getCode(), e.getMessage());
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    @ResponseBody
+    public Result error(BusinessException e){
         e.printStackTrace();
         return Result.build(null,e.getCode(), e.getMessage());
     }

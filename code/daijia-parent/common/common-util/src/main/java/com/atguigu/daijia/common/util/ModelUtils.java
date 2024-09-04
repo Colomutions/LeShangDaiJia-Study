@@ -4,6 +4,7 @@ import com.atguigu.daijia.common.Exception.BusinessException;
 import com.atguigu.daijia.common.result.Result;
 import com.atguigu.daijia.common.result.ResultCodeEnum;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -18,6 +19,18 @@ public final class ModelUtils {
     }
     public static void isNull( Object object, String message ) {
         if(object != null){
+            throw new BusinessException(message);
+        }
+    }
+
+    public static void nonBlank( Object object, String message ) {
+        nonNull(object, message);
+        if(!StringUtils.hasText(object.toString())){
+            throw new BusinessException(message);
+        }
+    }
+    public static void isBlank( Object object, String message ) {
+        if(Objects.isNull(object)||StringUtils.hasText(object.toString())){
             throw new BusinessException(message);
         }
     }

@@ -4,6 +4,7 @@ import com.atguigu.daijia.common.constant.RedisConstant;
 import com.atguigu.daijia.common.constant.RequestHeaderConstant;
 import com.atguigu.daijia.common.result.Result;
 import com.atguigu.daijia.common.result.ResultCodeEnum;
+import com.atguigu.daijia.common.util.AuthContextHolder;
 import com.atguigu.daijia.common.util.ModelUtils;
 import com.atguigu.daijia.common.util.ResultCheckUtil;
 import com.atguigu.daijia.customer.client.CustomerInfoFeignClient;
@@ -44,10 +45,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerLoginVo getCustomerLoginInfo(HttpServletRequest request) {
-        String token = request.getHeader(RequestHeaderConstant.TOKEN);
-        Object o = redisTemplate.opsForValue().get(RedisConstant.USER_LOGIN_KEY_PREFIX + token);
-        ModelUtils.nonNull(o,"token无效，请重新登录");
-        Long userId = Long.parseLong(o.toString());
+
+        Long userId = AuthContextHolder.getUserId();
         return ResultCheckUtil.checkCodeAndNonNull(customerInfoFeignClient.getCustomerInfo(userId), "访问用户服务异常，请联系管理员");
     }
 }

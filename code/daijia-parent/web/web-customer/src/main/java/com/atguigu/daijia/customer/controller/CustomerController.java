@@ -1,5 +1,6 @@
 package com.atguigu.daijia.customer.controller;
 
+import com.atguigu.daijia.common.login.LoginCheck;
 import com.atguigu.daijia.common.result.Result;
 import com.atguigu.daijia.customer.service.CustomerService;
 import com.atguigu.daijia.model.entity.customer.CustomerInfo;
@@ -10,10 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Tag(name = "客户API接口管理")
@@ -40,6 +38,7 @@ public class CustomerController {
 
     @Operation(summary = "小程序授权登录接口")
     @GetMapping("/getCustomerLoginInfo")
+    @LoginCheck
     public Result<CustomerLoginVo> getCustomerLoginInfo(HttpServletRequest request) {
         return Result.ok(customerService.getCustomerLoginInfo(request));
     }
