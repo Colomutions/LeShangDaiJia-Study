@@ -10,6 +10,7 @@ import com.atguigu.daijia.common.util.ResultCheckUtil;
 import com.atguigu.daijia.customer.client.CustomerInfoFeignClient;
 import com.atguigu.daijia.customer.service.CustomerService;
 import com.atguigu.daijia.model.entity.customer.CustomerInfo;
+import com.atguigu.daijia.model.form.customer.UpdateWxPhoneForm;
 import com.atguigu.daijia.model.vo.customer.CustomerInfoVo;
 import com.atguigu.daijia.model.vo.customer.CustomerLoginVo;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,5 +49,11 @@ public class CustomerServiceImpl implements CustomerService {
 
         Long userId = AuthContextHolder.getUserId();
         return ResultCheckUtil.checkCodeAndNonNull(customerInfoFeignClient.getCustomerInfo(userId), "访问用户服务异常，请联系管理员");
+    }
+
+    @Override
+    public Boolean updateWxPhoneNumber(UpdateWxPhoneForm updateWxPhoneForm) {
+
+        return ResultCheckUtil.checkCode(customerInfoFeignClient.updateWxPhoneNumber(updateWxPhoneForm));
     }
 }

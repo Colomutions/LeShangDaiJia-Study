@@ -2,6 +2,8 @@ package com.atguigu.daijia.customer.service.impl;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
+import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
+import com.atguigu.daijia.common.Exception.BusinessException;
 import com.atguigu.daijia.common.result.Result;
 import com.atguigu.daijia.common.util.ModelUtils;
 import com.atguigu.daijia.customer.mapper.CustomerInfoMapper;
@@ -9,6 +11,7 @@ import com.atguigu.daijia.customer.mapper.CustomerLoginLogMapper;
 import com.atguigu.daijia.customer.service.CustomerInfoService;
 import com.atguigu.daijia.model.entity.customer.CustomerInfo;
 import com.atguigu.daijia.model.entity.customer.CustomerLoginLog;
+import com.atguigu.daijia.model.form.customer.UpdateWxPhoneForm;
 import com.atguigu.daijia.model.vo.customer.CustomerLoginVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -89,5 +92,20 @@ public class CustomerInfoServiceImpl extends ServiceImpl<CustomerInfoMapper, Cus
         boolean bindPhone = StringUtils.hasText(customerInfo.getPhone());
         customerLoginVo.setIsBindPhone(bindPhone);
         return customerLoginVo;
+    }
+
+    @Override
+    public Boolean updateWxPhoneNumber(UpdateWxPhoneForm updateWxPhoneForm) throws WxErrorException {
+        WxMaPhoneNumberInfo phoneNoInfo = wxMaService.getUserService().getPhoneNoInfo(updateWxPhoneForm.getCode());
+        if(Objects.isNull(phoneNoInfo)){
+            throw new BusinessException("通过用户码值获取用户手机号失败");
+        }
+        CustomerInfo customerInfo = customerInfoMapper.selectById(updateWxPhoneForm.getCustomerId());
+        if(Objects.isNull(customerInfo)){
+            throw new BusinessException("不存在的用户，请联系管理员");
+        }
+        customerInfo.setPhone(phoneNoInfo.getPhoneNumber());
+        customerInfoMapper.updateById(customerInfo);
+        return true;
     }
 }
