@@ -1,10 +1,13 @@
 package com.atguigu.daijia.driver.controller;
 
+import com.atguigu.daijia.common.login.LoginCheck;
 import com.atguigu.daijia.common.result.Result;
 import com.atguigu.daijia.driver.service.DriverService;
 import com.atguigu.daijia.model.entity.driver.DriverInfo;
+import com.atguigu.daijia.model.vo.driver.DriverLoginVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,10 +28,14 @@ public class DriverController {
     @GetMapping("/login/{code}")
     Result<String> login(@PathVariable("code") String code){
         return Result.ok(driverService.login(code));
-
     }
 
 
+    @GetMapping("/getDriverLoginInfo")
+    @LoginCheck
+    Result<DriverLoginVo> getDriverLoginInfo(HttpServletRequest httpServletRequest){
+        return Result.ok(driverService.getDriverLoginInfo(httpServletRequest));
+    }
 
 }
 

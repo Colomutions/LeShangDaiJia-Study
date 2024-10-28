@@ -14,10 +14,12 @@ import com.atguigu.daijia.model.entity.driver.DriverAccount;
 import com.atguigu.daijia.model.entity.driver.DriverInfo;
 import com.atguigu.daijia.model.entity.driver.DriverLoginLog;
 import com.atguigu.daijia.model.entity.driver.DriverSet;
+import com.atguigu.daijia.model.vo.driver.DriverLoginVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -87,5 +89,19 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
 
 //         返回用户的id
         return isExist.getId();
+    }
+
+    @Override
+    public DriverLoginVo getDriverInfo(Long driverId) {
+        DriverInfo driverInfo = driverInfoMapper.selectById(driverId);
+        DriverLoginVo driverLoginVo=new DriverLoginVo();
+        BeanUtils.copyProperties(driverInfo,driverLoginVo);
+        if(Objects.nonNull(driverInfo.getFaceModelId())){
+            log.info("此处的用户的人脸模型已经识别，用户id为：{},人脸模型id为：{}",driverId,driverInfo.getFaceModelId());
+            driverLoginVo.setIsArchiveFace(true);
+        }else{
+            driverLoginVo.setIsArchiveFace(false);
+        }
+        return driverLoginVo;
     }
 }
