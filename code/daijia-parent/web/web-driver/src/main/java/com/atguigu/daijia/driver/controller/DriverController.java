@@ -25,12 +25,13 @@ public class DriverController {
     @Autowired
     private DriverService driverService;
 
+    @Operation(summary = "司机登录相关接口")
     @GetMapping("/login/{code}")
     Result<String> login(@PathVariable("code") String code){
         return Result.ok(driverService.login(code));
     }
 
-
+    @Operation(summary = "获取司机信息相关接口")
     @GetMapping("/getDriverLoginInfo")
     @LoginCheck
     Result<DriverLoginVo> getDriverLoginInfo(HttpServletRequest httpServletRequest){
