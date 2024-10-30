@@ -1,10 +1,14 @@
 package com.atguigu.daijia.driver.service.impl;
 
 import com.atguigu.daijia.common.constant.RedisConstant;
+import com.atguigu.daijia.common.result.Result;
 import com.atguigu.daijia.common.util.AuthContextHolder;
 import com.atguigu.daijia.common.util.ResultCheckUtil;
 import com.atguigu.daijia.driver.client.DriverInfoFeignClient;
 import com.atguigu.daijia.driver.service.DriverService;
+import com.atguigu.daijia.model.form.driver.DriverFaceModelForm;
+import com.atguigu.daijia.model.form.driver.UpdateDriverAuthInfoForm;
+import com.atguigu.daijia.model.vo.driver.DriverAuthInfoVo;
 import com.atguigu.daijia.model.vo.driver.DriverLoginVo;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -40,5 +44,21 @@ public class DriverServiceImpl implements DriverService {
         Long userId = AuthContextHolder.getUserId();
         DriverLoginVo driverLoginVo = ResultCheckUtil.checkCode(driverInfoFeignClient.getDriverInfo(userId));
         return driverLoginVo;
+    }
+
+    @Override
+    public DriverAuthInfoVo getDriverAuthInfo(Long driverId) {
+        return ResultCheckUtil.checkCode(driverInfoFeignClient.getDriverAuthInfo(driverId));
+    }
+
+    @Override
+    public Boolean updateDriverAuthInfo(UpdateDriverAuthInfoForm updateDriverAuthInfoForm) {
+        return ResultCheckUtil.checkCode(driverInfoFeignClient.UpdateDriverAuthInfo(updateDriverAuthInfoForm));
+    }
+
+    //创建司机人脸模型
+    @Override
+    public Boolean creatDriverFaceModel(DriverFaceModelForm driverFaceModelForm) {
+        return ResultCheckUtil.checkCode(driverInfoFeignClient.creatDriverFaceModel(driverFaceModelForm));
     }
 }
