@@ -29,7 +29,5 @@ public class MapController {
         return Result.ok(mapService.calculateDrivingLine(calculateDrivingLineForm));
     }
 
-
-
 }
 
