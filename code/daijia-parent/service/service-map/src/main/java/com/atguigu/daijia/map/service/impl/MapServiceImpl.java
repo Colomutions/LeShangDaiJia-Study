@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -25,13 +26,13 @@ public class MapServiceImpl implements MapService {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Value("tencent.cloud.map")
+    @Value("${tencent.cloud.map.key}")
     private String key;
 
 
     @Override
     public DrivingLineVo calculateDrivingLine(CalculateDrivingLineForm calculateDrivingLineForm) {
-        String url="https://apis.map.qq.com/ws/direction/v1/driving/?from={from}&to={to}&key=[{key}]";
+        String url="https://apis.map.qq.com/ws/direction/v1/driving/?from={from}&to={to}&key={key}";
         Map<String,String> map=new HashMap<>();
         map.put("from",calculateDrivingLineForm.getStartPointLatitude()+","+calculateDrivingLineForm.getStartPointLongitude());
         map.put("to",calculateDrivingLineForm.getEndPointLatitude()+","+calculateDrivingLineForm.getEndPointLongitude());
@@ -50,7 +51,7 @@ public class MapServiceImpl implements MapService {
             log.error("调用tencent地图API失败");
             log.info(forObject.toString());
         }
-        if(drivingLineVo==null){
+        if(Objects.nonNull(drivingLineVo)){
             return drivingLineVo;
         }else{
             throw new BusinessException("无法正常获取腾讯地图api数据");
