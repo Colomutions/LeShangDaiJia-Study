@@ -4,8 +4,11 @@ import com.atguigu.daijia.common.result.Result;
 import com.atguigu.daijia.common.util.ResultCheckUtil;
 import com.atguigu.daijia.customer.service.OrderService;
 import com.atguigu.daijia.map.client.MapFeignClient;
+import com.atguigu.daijia.model.entity.order.OrderInfo;
 import com.atguigu.daijia.model.form.customer.ExpectOrderForm;
+import com.atguigu.daijia.model.form.customer.SubmitOrderForm;
 import com.atguigu.daijia.model.form.map.CalculateDrivingLineForm;
+import com.atguigu.daijia.model.form.order.OrderInfoForm;
 import com.atguigu.daijia.model.form.rules.FeeRuleRequestForm;
 import com.atguigu.daijia.model.vo.customer.ExpectOrderVo;
 import com.atguigu.daijia.model.vo.map.DrivingLineVo;
@@ -13,6 +16,7 @@ import com.atguigu.daijia.model.vo.order.CurrentOrderInfoVo;
 import com.atguigu.daijia.model.vo.rules.FeeRuleResponseVo;
 import com.atguigu.daijia.order.client.OrderInfoFeignClient;
 import com.atguigu.daijia.rules.client.FeeRuleFeignClient;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,5 +57,29 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public CurrentOrderInfoVo searchCustomerCurrentOrder(Long customerId) {
         return ResultCheckUtil.checkCode(orderInfoFeignClient.searchCustomerCurrentOrder(customerId));
+    }
+
+    @Override
+    public Long submitOrder(SubmitOrderForm submitOrderForm) {
+        CalculateDrivingLineForm calculateDrivingLineForm=new CalculateDrivingLineForm();
+        BeanUtils.copyProperties(submitOrderForm,calculateDrivingLineForm);
+        DrivingLineVo drivingLineVo = ResultCheckUtil.checkCode(mapFeignClient.calculateDrivingLine(calculateDrivingLineForm));
+        FeeRuleRequestForm form=new FeeRuleRequestForm();
+        form.setDistance(drivingLineVo.getDistance());
+        form.setWaitMinute(0);
+        form.setStartTime(new Date());
+        FeeRuleResponseVo feeRuleResponseVo = ResultCheckUtil.checkCode(feeRuleFeignClient.calculateOrderFee(form));
+        OrderInfoForm orderInfoForm=new OrderInfoForm();
+        BeanUtils.copyProperties(submitOrderForm,orderInfoForm);
+        orderInfoForm.setExpectDistance(drivingLineVo.getDistance());
+        orderInfoForm.setExpectDistance(feeRuleResponseVo.getTotalAmount());
+        Long orderId = ResultCheckUtil.checkCode(orderInfoFeignClient.saveOrderInfo(orderInfoForm));
+//        TODO 此处需要查询附近范围内可以接单的司机
+        return orderId;
+    }
+
+    @Override
+    public Integer getOrderStatus(Long orderId) {
+        return ResultCheckUtil.checkCode(orderInfoFeignClient.getOrderStatus(orderId));
     }
 }

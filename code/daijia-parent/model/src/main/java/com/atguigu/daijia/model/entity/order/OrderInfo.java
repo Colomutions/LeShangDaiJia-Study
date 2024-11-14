@@ -64,7 +64,7 @@ public class OrderInfo extends BaseEntity {
 	@TableField("real_amount")
 	private BigDecimal realAmount;
 
-    @Schema(description = "顾客好处费")
+    @Schema(description = "顾客打赏费")
 	@TableField("favour_fee")
 	private BigDecimal favourFee;
 
